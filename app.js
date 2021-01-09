@@ -2,12 +2,10 @@ const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const multer = require("multer");
 
-const feedRoutes = require("./routes/feed");
-const authRoutes = require("./routes/auth");
-
+const routeManage = require('./routes');
+const Database =  require('./config/database');
 const app = express();
 
 const fileStorage = multer.diskStorage({
@@ -31,6 +29,9 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Route Mange routes
+routeManage(app);
+
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
 app.use(
@@ -48,8 +49,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/feed", feedRoutes);
-app.use("/auth", authRoutes);
 
 app.use((error, req, res, next) => {
   console.log(error);
@@ -59,15 +58,5 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
-mongoose
-  .connect(
-    "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
-  )
-  .then((result) => {
-    const server = app.listen(5000);
-    const io = require('./socket').init(server);
-    io.on('connection', socket => {
-      console.log('Client connected');
-    });
-  })
-  .catch((err) => console.log(err));
+// Connect database
+Database.connect(app);
