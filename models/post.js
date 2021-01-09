@@ -9,13 +9,12 @@ const postSchema = new Schema(
     },
     imageUrl: {
       type: String,
-      required: true,
     },
     introduction: {
       type: String,
       required: true,
     },
-    description: {
+    content: {
       type: String,
       required: true,
     },

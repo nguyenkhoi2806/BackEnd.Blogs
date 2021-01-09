@@ -29,8 +29,6 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Route Mange routes
-routeManage(app);
 
 // app.use(bodyParser.urlencoded()); // x-www-form-urlencoded <form>
 app.use(bodyParser.json()); // application/json
@@ -50,6 +48,9 @@ app.use((req, res, next) => {
 });
 
 
+// Route Mange routes
+routeManage(app);
+
 app.use((error, req, res, next) => {
   console.log(error);
   const status = error.statusCode || 500;
@@ -57,6 +58,7 @@ app.use((error, req, res, next) => {
   const data = error.data;
   res.status(status).json({ message: message, data: data });
 });
+
 
 // Connect database
 Database.connect(app);
