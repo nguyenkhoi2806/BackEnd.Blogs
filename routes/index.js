@@ -1,12 +1,12 @@
 const authRoutes = require("./auth");
-const feedRoutes = require("./feed");
+const postRoutes = require("./post");
 
 const route = (app) => {
   app.get("/", function (req, res, next) {
     res.send("UnAuthorized");
   });
   app.use("/auth", authRoutes);
-  app.use("/feed", feedRoutes);
+  app.use("/post", postRoutes);
 };
 
 module.exports = route;
