@@ -14,6 +14,7 @@ const driverConnect = (app) => {
     .connect(url)
     .then((result) => {
       const server = app.listen(Env.PORT);
+      console.log("Port running is " + Env.PORT);
       const io = require("./socket").init(server);
       io.on("connection", (socket) => {
         console.log("Client connected");
