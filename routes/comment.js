@@ -7,5 +7,6 @@ const CommentController = require("../controllers/comment");
 const router = express.Router();
 
 //post comment
-router.get('/comment', isAuth, CommentController.comment);
-router.get('/delete/:id', isAuth, CommentController.delete);
+router.post('/save', isAuth, CommentController.comment);
+
+module.exports = router;

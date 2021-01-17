@@ -1,5 +1,4 @@
 const express = require("express");
-const { body } = require("express-validator/check");
 
 const postController = require("../controllers/post");
 const isAuth = require("../middleware/is-auth");
@@ -7,24 +6,17 @@ const isAuth = require("../middleware/is-auth");
 const router = express.Router();
 
 // GET /feed/posts
-router.get("/posts", isAuth, postController.getPosts);
+router.get("/get-all", postController.getAll);
 
 // POST /feed/post
 router.post("/create", isAuth, postController.createPost);
 
-router.get("/post/:postId", isAuth, postController.getPost);
+router.get("/get-post-view/:postId",  postController.getPostView);
 
-router.put(
-  "/post/:postId",
-  isAuth,
-  [
-    body("title").trim().isLength({ min: 5 }),
-    body("content").trim().isLength({ min: 5 }),
-  ],
-  postController.updatePost
-);
+router.put("/update/:postId", isAuth, postController.updatePost);
 
-router.delete("/post/:postId", isAuth, postController.deletePost);
-router.get("/my-post", isAuth, postController.getMyPosts);
+router.delete("/delete/:postId", isAuth, postController.deletePost);
+router.get("/my-post-list", isAuth, postController.getMyPosts);
+router.get("/get-post-edit/:postId", isAuth, postController.postEdit);
 
 module.exports = router;

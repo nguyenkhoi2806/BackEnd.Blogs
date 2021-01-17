@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new Schema(
   {
-    title: {
+    content: {
       type: String,
-      required: true,
     },
-    description: {
-      type: String,
+    postId: {
+      type: Schema.Types.ObjectId,
+      ref: "Post",
       required: true,
     },
     creator: {
