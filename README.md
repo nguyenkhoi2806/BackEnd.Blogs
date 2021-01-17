@@ -1,3 +1,4 @@
-1 npm install 
-2 config in .env file
-3 nodemon to run app api
+1 Install mongodb
+2 npm install 
+3 config in .env file
+4 node app.js to run app api
