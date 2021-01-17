@@ -8,6 +8,8 @@ const routeManage = require('./routes');
 const Database =  require('./config/database');
 const app = express();
 
+
+
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "images");
@@ -46,7 +48,6 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
-
 
 // Route Mange routes
 routeManage(app);

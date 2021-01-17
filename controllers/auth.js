@@ -35,6 +35,7 @@ exports.signup = async (req, res, next) => {
     res.status(201).json({
       message: "User created!",
       user: {
+        id: result._id,
         name: result.name,
         email: result.email,
       },
@@ -72,13 +73,14 @@ exports.login = async (req, res, next) => {
         userId: loadedUser._id.toString(),
       },
       "somesupersecretsecret",
-      { expiresIn: "1h" }
+      { expiresIn: "2h" }
     );
     res.status(200).json({
       token: token,
       user: {
         email: loadedUser.email,
         name: loadedUser.name,
+        id: loadedUser._id
       },
     });
   } catch (err) {

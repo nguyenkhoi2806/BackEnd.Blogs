@@ -35,33 +35,34 @@ exports.createPost = async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       const error = new Error("Validation failed, entered data is incorrect.");
-      error.statusCode = 422;
+      error.statusCode = 200;
       throw error;
     }
-    // if (!req.file) {
-    //   const error = new Error("No image provided.");
-    //   error.statusCode = 422;
-    //   throw error;
-    // }
-   // const imageUrl = req.file.path;
+    if (!req.file.path) {
+      const error = new Error('No image provided.');
+      error.statusCode = 200;
+      throw error;
+    }
     const title = req.body.title;
     const content = req.body.content;
     const introduction = req.body.introduction;
+    const imageUrl = req.file.path;
+
     const post = new Post({
       title: title,
       content: content,
       introduction: introduction,
-    //  imageUrl: imageUrl,
+      imageUrl: imageUrl,
       creator: req.userId,
     });
     await post.save();
     const user = await User.findById(req.userId);
     user.posts.push(post);
     await user.save();
-    io.getIO().emit("posts", {
-      action: "create",
-      post: { ...post._doc, creator: { _id: req.userId, name: user.name } },
-    });
+    // io.getIO().emit("posts", {
+    //   action: "create",
+    //   post: { ...post._doc, creator: { _id: req.userId, name: user.name } },
+    // });
     res.status(201).json({
       message: "Post created successfully!",
       post: post,
@@ -177,4 +178,28 @@ exports.deletePost = async (req, res, next) => {
 const clearImage = (filePath) => {
   filePath = path.join(__dirname, "..", filePath);
   fs.unlink(filePath, (err) => console.log(err));
+};
+
+
+exports.getMyPosts = async (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = 4;
+  try {
+    const totalItems = await Post.find({creator: req.userId}).countDocuments();
+    const posts = await Post.find({creator: req.userId}).sort({createdAt: -1})
+      .populate("creator")
+      .skip((currentPage - 1) * perPage)
+      .limit(perPage);
+
+    res.status(200).json({
+      message: "Fetched posts successfully.",
+      posts: posts,
+      totalItems: totalItems,
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
 };
